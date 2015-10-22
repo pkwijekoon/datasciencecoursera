@@ -1,0 +1,115 @@
+---
+Title: "Introduction"
+date: "`r Sys.Date()`"
+output: rmarkdown::heml_vignette
+---
+Introduction
+========================================================
+It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a [Fitbit](http://www.fitbit.com/), [Nike Fuelband](http://www.nike.com/us/en_us/c/nikeplus-fuel), or [Jawbone Up](https://jawbone.com/up). These type of devices are part of the "quantified self" movement -- a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
+
+This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
+
+---
+## **Data**  
+The data for this assignment can be downloaded from the course web site:  
+- **Dataset**: [Activity monitoring data](https://d396qusza40orc.cloudfrony.net) [52K]
+
+The variables included in this dataset are:  
+- **steps**: Numberof steps taking in a 5-minute interval (missing values are coded as NA)
+- **date**: The date on which the measurement was taken in YYYY-MM-DD format
+- **interval**: Identifier for the 5-minute interval in which measurement was taken  
+
+The dataset is stored in a comma-separated-value (CSV) file and there are a total of 17,568 observations in this dataset.
+
+---
+```{r echo=TRUE, warning=FALSE}
+activity=read.csv("D:/coursera/Reproducible Research/peer assessment/activity.csv")
+nrow(activity)
+# create new dataset without missing data
+newactivity <- na.omit(activity)
+head(newactivity)
+#Total number of steps per each day
+newdata=aggregate(steps ~ date, data = newactivity, sum)
+#Mean of steps per each day
+a=aggregate(steps ~ date, data = newactivity, mean)
+#Mean of steps per day
+mean(a$steps)
+#Median of steps per day
+median(a$steps)
+```
+The mean and median of steps variable per day are 37.3826 and 37.37847, respectively.  
+```{r echo=TRUE, warning=FALSE}
+#Creating a histogram per each day
+hist(newdata$steps, breaks=5)
+histinfo<-hist(newdata$steps, breaks=5)
+histinfo
+```  
+The highest frequency (28) of total number of steps per day occurs in the range 10000-15000, and the lowest frequency (2) occurs in the range 20000-25000.   
+```{r echo=TRUE, warning=FALSE}
+#Creating time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days
+b=aggregate(steps ~ interval, data = newactivity, mean)
+head(b)
+summary(b)
+plot(b$interval,b$steps, type="l", main="Scatterplot of interval vs. mean number of steps", xlab="Interval", ylab="Mean number of steps")
+```  
+
+Maximum mean number of steps 206.170 occurs at 805th interval.  
+```{r echo=TRUE, warning=FALSE}
+#Finding the number of missing values in steps variable
+x=activity$steps
+sum(is.na(x))
+```
+Total number of missing values in steps variable is 2304.
+```{r echo=TRUE, warning=FALSE}
+#Filling in all of the missing values in the dataset using the mean for that 5-minute interval, and create a new data set called nactivity.
+nactivity=activity
+nactivity$steps[is.na(nactivity$steps)] =b$steps
+nrow(nactivity)
+#Total number of steps per each day in nactivity data
+tanc=aggregate(steps ~ date, data = nactivity, sum)
+#Mean of steps per each day
+anc=aggregate(steps ~ date, data = nactivity, mean)
+#Mean of steps per day
+mean(anc$steps)
+#Median of steps per day
+median(anc$steps)
+#Comparing total daily number of steps.
+activity[is.na(activity)] = -1
+ndata=aggregate(steps ~ date, data = activity, sum)
+nrow(ndata);nrow(tanc)
+comp=cbind(ndata,tanc )
+head(comp)
+```
+In this case both mean and median are 37.3826,which is the mean of the activity data without missing values. After imputing estimates to missing data, the totals are same for other steps, but for the missing values the total steps is the same which is 10766.19.
+```{r echo=TRUE, warning=FALSE}
+#Separating week days and weekends in nactivity data
+
+#m=weekdays(nactivity$date, abbr = TRUE)
+mactivity=nactivity
+mactivity$day <- weekdays(as.Date(mactivity$date))
+#mactivity
+#mactivity$day<-strptime(mactivity[,2], "%Y-%m-%d")
+#mactivity$weekday<-weekdays(mactivity$day)
+#Creating new factor variables df1 and df2 in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day
+df1=subset(mactivity,mactivity$day=="Saturday" | mactivity$day == "Sunday")
+df2=subset(mactivity,mactivity$day!="Saturday" & mactivity$day != "Sunday")
+head(df1) ; head(df2)
+```
+Two data sets called df1 and df2 are created which separate two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+```{r echo=TRUE, warning=FALSE}
+#Finding 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days 
+b1=aggregate(steps ~ interval, data = df1, mean)
+b2=aggregate(steps ~ interval, data = df2, mean)
+#Adding a factor variable to each b1 and b2 as weekends and weekdays
+b1["Time"] <- "Weekend" 
+b2["Time"] <- "Weekdays" 
+tdat=rbind(b1,b2)
+
+#Creating panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days
+library("lattice")
+xyplot(steps ~ interval| Time,data = tdat,type = "l", main="Panal plot showing the differences in activity patterns between weekdays and weekends", xlab="Interval", ylab="Mean number of steps")
+```  
+
+According to the panal plot there are differences in activity patterns between weekdays and weekends.
+
+
