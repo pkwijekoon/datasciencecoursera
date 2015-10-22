@@ -1,7 +1,7 @@
 ---
-Title: "Introduction"
-date: "`r Sys.Date()`"
-output: rmarkdown::heml_vignette
+Title: "Introduction"  
+date: "`r Sys.Date()`"  
+output: pdf_document  
 ---
 Introduction
 ========================================================
@@ -40,7 +40,9 @@ median(a$steps)
 The mean and median of steps variable per day are 37.3826 and 37.37847, respectively.  
 ```{r echo=TRUE, warning=FALSE}
 #Creating a histogram per each day
+jpeg('hplot.jpg')
 hist(newdata$steps, breaks=5)
+dev.off()
 histinfo<-hist(newdata$steps, breaks=5)
 histinfo
 ```  
@@ -50,7 +52,10 @@ The highest frequency (28) of total number of steps per day occurs in the range 
 b=aggregate(steps ~ interval, data = newactivity, mean)
 head(b)
 summary(b)
-plot(b$interval,b$steps, type="l", main="Scatterplot of interval vs. mean number of steps", xlab="Interval", ylab="Mean number of steps")
+#Printing the plot as jpeg file
+jpeg('timeplot.jpg')
+plot(b$interval,b$steps, type="l", main="Scatterplot of interval vs. mean number of steps", xlab="Interval", ylab"Mean number of steps")
+dev.off()
 ```  
 
 Maximum mean number of steps 206.170 occurs at 805th interval.  
@@ -107,7 +112,10 @@ tdat=rbind(b1,b2)
 
 #Creating panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days
 library("lattice")
+#Printing the plot as jpeg file
+jpeg('panalplot.jpg')
 xyplot(steps ~ interval| Time,data = tdat,type = "l", main="Panal plot showing the differences in activity patterns between weekdays and weekends", xlab="Interval", ylab="Mean number of steps")
+dev.off()
 ```  
 
 According to the panal plot there are differences in activity patterns between weekdays and weekends.
