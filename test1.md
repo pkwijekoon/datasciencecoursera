@@ -1,8 +1,7 @@
 ---
-Title: "Introduction"
-date: "2015-10-22"
-#output: rmarkdown::heml_vignette
-output: pdf_document
+Title: "Introduction"  
+date: "2015-10-22"  
+output: pdf_document  
 ---
 Introduction
 ========================================================
@@ -74,7 +73,17 @@ The mean and median of steps variable per day are 37.3826 and 37.37847, respecti
 
 ```r
 #Creating a histogram per each day
+jpeg('hplot.jpg')
 hist(newdata$steps, breaks=5)
+dev.off()
+```
+
+```
+## png 
+##   2
+```
+
+```r
 histinfo<-hist(newdata$steps, breaks=5)
 ```
 
@@ -139,6 +148,7 @@ summary(b)
 ```
 
 ```r
+#jpeg('rplot.jpg')
 plot(b$interval,b$steps, type="l", main="Scatterplot of interval vs. mean number of steps", xlab="Interval", ylab="Mean number of steps")
 ```
 
