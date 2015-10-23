@@ -23,7 +23,7 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 
 ---
 ```{r echo=TRUE, warning=FALSE}
-activity=read.csv("D:/coursera/Reproducible Research/peer assessment/activity.csv")
+activity=read.csv("D:/coursera/R-gitworks/activity.csv")
 nrow(activity)
 # create new dataset without missing data
 newactivity <- na.omit(activity)
@@ -53,9 +53,9 @@ b=aggregate(steps ~ interval, data = newactivity, mean)
 head(b)
 summary(b)
 #Printing the plot as jpeg file
-jpeg('timeplot.jpg')
-plot(b$interval,b$steps, type="l", main="Scatterplot of interval vs. mean number of steps", xlab="Interval", ylab"Mean number of steps")
-dev.off()
+plot(b$interval,b$steps, type="l", main="Scatterplot of interval vs. mean number of steps", xlab="Interval", ylab="Mean number of steps")
+dev.print(timeplot.jpg)
+ 
 ```  
 
 Maximum mean number of steps 206.170 occurs at 805th interval.  
@@ -113,9 +113,9 @@ tdat=rbind(b1,b2)
 #Creating panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days
 library("lattice")
 #Printing the plot as jpeg file
-jpeg('panalplot.jpg')
 xyplot(steps ~ interval| Time,data = tdat,type = "l", main="Panal plot showing the differences in activity patterns between weekdays and weekends", xlab="Interval", ylab="Mean number of steps")
-dev.off()
+dev.print(panalplot,jpg)
+
 ```  
 
 According to the panal plot there are differences in activity patterns between weekdays and weekends.

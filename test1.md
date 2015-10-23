@@ -1,6 +1,6 @@
 ---
 Title: "Introduction"  
-date: "2015-10-22"  
+date: "2015-10-23"  
 output: pdf_document  
 ---
 Introduction
@@ -24,7 +24,7 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 ---
 
 ```r
-activity=read.csv("D:/coursera/Reproducible Research/peer assessment/activity.csv")
+activity=read.csv("D:/coursera/R-git/activity.csv")
 nrow(activity)
 ```
 
@@ -148,11 +148,19 @@ summary(b)
 ```
 
 ```r
-#jpeg('rplot.jpg')
+#Printing the plot as jpeg file
 plot(b$interval,b$steps, type="l", main="Scatterplot of interval vs. mean number of steps", xlab="Interval", ylab="Mean number of steps")
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+
+```r
+dev.print(timeplot.jpg)
+```
+
+```
+## Error in dev.print(timeplot.jpg): object 'timeplot.jpg' not found
+```
 
 Maximum mean number of steps 206.170 occurs at 805th interval.  
 
@@ -278,10 +286,19 @@ tdat=rbind(b1,b2)
 
 #Creating panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days
 library("lattice")
+#Printing the plot as jpeg file
 xyplot(steps ~ interval| Time,data = tdat,type = "l", main="Panal plot showing the differences in activity patterns between weekdays and weekends", xlab="Interval", ylab="Mean number of steps")
 ```
 
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+
+```r
+dev.print(panalplot,jpg)
+```
+
+```
+## Error in dev.print(panalplot, jpg): object 'panalplot' not found
+```
 
 According to the panal plot there are differences in activity patterns between weekdays and weekends.
 
